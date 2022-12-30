@@ -11,6 +11,7 @@ namespace Gameplay
         private bool player1Start, player2Start;
         private bool player1Turn, player2Turn;
         private bool paused;
+        private bool isSetup;
 
         private void Start()
         {
@@ -27,7 +28,6 @@ namespace Gameplay
             if(rand == 2)
             {
                 player2Start = true;
-                Debug.Log("Player 2 start");
             }
         }
 
@@ -63,7 +63,7 @@ namespace Gameplay
             if (player2Turn)
                 state = States.PLAYER2TURN;
         }
-
+ 
         void UpdateState()
         {
             if (state == States.PLAYER1TURN)

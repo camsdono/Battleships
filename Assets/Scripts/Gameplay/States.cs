@@ -4,6 +4,7 @@
     {
         MENU,
         PAUSED,
+        SETUP,
         PLAYER1TURN,
         PLAYER2TURN,
         PLAYER1WON,

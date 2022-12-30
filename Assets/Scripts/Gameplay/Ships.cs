@@ -10,5 +10,6 @@ namespace Gameplay
         [Header("Number of ships:")]
         public string NameOfShip;
         public int NumberOfHoles;
+        public int NumberPerGame;
     }
 }

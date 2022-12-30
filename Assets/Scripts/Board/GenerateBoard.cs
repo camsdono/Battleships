@@ -13,7 +13,7 @@ public class GenerateBoard : MonoBehaviour
     public Color gridColor;
     private int index;
 
-    private void Start()
+    private void Awake()
     {
         for (int x = 0; x < Rows; x++)
         {
