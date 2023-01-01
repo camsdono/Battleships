@@ -7,21 +7,24 @@ namespace Gameplay
     public class GameManager : MonoBehaviour
     {
         private Color defaultColorTile;
+        private PlaceBoatsManager boatManager;
         public int CurrentTileIndex = -1;
         public GridObject[] tileObjects;
+        public bool isBuild;
         
         private void Start()
         {
             tileObjects = FindObjectsOfType<GridObject>();
             defaultColorTile = FindObjectOfType<GenerateBoard>().gridColor;
+            boatManager = GetComponent<PlaceBoatsManager>();
         }
 
         private void Update()
         {
-            GridClickDetection();
+            ClickDetection();
         }
     
-        void GridClickDetection()
+        void ClickDetection()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -43,12 +46,23 @@ namespace Gameplay
                     
                     if (hit.collider.GetComponent<ClickableObject>() != null)
                     {
-                        if (hit.collider.GetComponent<ClickableObject>().ObjectName == "GridTile")
+                        ClickableObject clickable = hit.collider.GetComponent<ClickableObject>();
+                        if (clickable.ObjectName == "GridTile")
                         {
                             if (!hit.collider.GetComponent<GridObject>().isHit && !hit.collider.GetComponent<GridObject>().isMiss)
                             {
                                 CurrentTileIndex = hit.collider.GetComponent<GridObject>().GridID;
                                 hit.collider.GetComponent<SpriteRenderer>().color = Color.gray; 
+                            }
+                        }
+
+                        if (clickable.ObjectName == "BuildObject")
+                        {
+                            BuildObject buildObject = hit.collider.GetComponent<BuildObject>();
+                            if (buildObject != null)
+                            {
+                                boatManager.PlaceShip(buildObject.shipID);
+                                isBuild = true;
                             }
                         }
                     }

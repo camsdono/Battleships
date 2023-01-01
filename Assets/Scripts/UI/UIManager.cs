@@ -8,6 +8,8 @@ namespace UI
     public class UIManager : MonoBehaviour
     {
         private GameManager manager;
+        private ShipManager _ship;
+        private PlaceBoatsManager _boatsManager;
         private Firing firing;
         public int tileIndex;
 
@@ -15,6 +17,8 @@ namespace UI
         {
             manager = FindObjectOfType<GameManager>();
             firing = gameObject.AddComponent<Firing>();
+            _ship = GetComponent<ShipManager>();
+            _boatsManager = GetComponent<PlaceBoatsManager>();
         }
 
         private void Update()
