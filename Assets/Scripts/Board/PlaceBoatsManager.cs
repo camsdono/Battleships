@@ -19,6 +19,9 @@ namespace Board
         private bool isGhost;
         private GameObject pendingBoat;
         private Vector3 MousePosition;
+        public float gridXOffset, gridYOffset;
+        private float oppositeXOffset, oppositeYOffset;
+        public float rotationAngle;
 
         private void Awake()
         {
@@ -28,11 +31,15 @@ namespace Board
 
             for (int i = 0; i < _shipManager.ships.Length; i++)
             {
+                //Makes the build buttons appear and work.
                 GameObject ShipPlaceButton = Instantiate(ShipBuildObject);
                 ShipPlaceButton.transform.SetParent(ButtonLocation);
                 ShipPlaceButton.transform.position = new Vector3(-2, i + offset, 0);
                 ShipPlaceButton.GetComponent<BuildObject>().shipID = i;
             }
+
+            oppositeXOffset = gridYOffset;
+            oppositeYOffset = gridXOffset;
         }
         
         private void Update()
@@ -40,6 +47,7 @@ namespace Board
             if (_manager.isBuild)
             {
                 SelectGrid();
+                RotateShip();
             }
         }
 
@@ -49,28 +57,72 @@ namespace Board
             {
                 if (!isGhost)
                 {
+                    //Makes the boat appear on screen and also to set it as a ghost.
                     pendingBoat = Instantiate(ship.shipObject);
                     isGhost = true;
                 }
                 else
                 {
+                    // Gets current Mouse Position
                     MousePosition = Input.mousePosition;
                     Vector3 worldPos = Camera.main.ScreenToWorldPoint(MousePosition);
                     Vector3 worldPos2D = new Vector3(worldPos.x, worldPos.y, -5);
 
                     if (pendingBoat != null)
                     {
-                        pendingBoat.transform.position = worldPos2D;
+                        // Changes position of boat based upon mouse
+                        pendingBoat.transform.position = new Vector3(RoundToNearestFloat(worldPos2D.x), RoundToNearestFloatY(worldPos2D.y), worldPos2D.z);
                     }
 
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        isGhost = false;
+                        ship = null;
+                        pendingBoat = null;
+                    }
+    
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
+                        //Cancels building
                         isGhost = false;
                         ship = null;
                         Destroy(pendingBoat);
                         pendingBoat = null;
                     }
                 }
+            }
+        }
+
+        float RoundToNearestFloat(float posX)
+        {
+            float xDiff = posX % gridXOffset;
+            posX -= xDiff;
+            if (xDiff > (gridXOffset / 2))
+            {
+                posX += gridXOffset;
+            }
+
+            return posX;
+        }
+
+        float RoundToNearestFloatY(float posY)
+        {
+            float yDiff = posY % gridYOffset;
+            posY -= yDiff;
+            if (yDiff > (gridYOffset / 2))
+            {
+                posY += gridYOffset;
+            }
+
+            return posY;
+        }
+
+        public void RotateShip()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                // Rotate The Boats Position;
+                pendingBoat.transform.Rotate(0, 0, rotationAngle);
             }
         }
 
